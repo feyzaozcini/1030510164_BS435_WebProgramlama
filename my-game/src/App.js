@@ -11,6 +11,7 @@ function App() {
     const [message, setMessage] = useState('');
     const [attemptsLeft, setAttemptsLeft] = useState(5);
     const [gameStarted, setGameStarted] = useState(false);
+    const [score, setScore] = useState(0);
 
     function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -23,6 +24,7 @@ function App() {
         setMessage('');
     };
 
+
     const handleGuess = () => {
         const guess = parseInt(userGuess, 10);
 
@@ -32,7 +34,10 @@ function App() {
         }
 
         if (guess === secretNumber) {
-            setMessage('Tebrikler, doğru sayıyı buldunuz!');
+            const currentScore = calculateScore(attemptsLeft);
+            setScore((prevScore) => prevScore + currentScore);
+            setMessage(`Tebrikler, doğru sayıyı buldunuz! Puanınız: ${currentScore}`);
+            setGameStarted(false);
         } else {
             const difference = Math.abs(secretNumber - guess);
             setMessage(
@@ -47,6 +52,16 @@ function App() {
             }
         }
     };
+
+    const calculateScore = (remainingAttempts) => {
+        const baseScore = 50; // İlk tahminde alınacak başlangıç puanı
+        const decrement = 10; // Her sonraki tahminde düşecek puan miktarı
+
+        const score = baseScore - (5 - remainingAttempts) * decrement;
+        return score >= 0 ? score : 0; // Puan negatif olmamalı
+    };
+
+
 
     return (
         <Container className="mt-5">
@@ -93,13 +108,14 @@ function App() {
 
                                 <p>{message}</p>
                                 <p>Kalan Deneme Hakkı: {attemptsLeft}</p>
+                                <p>Toplam Puan: {score}</p> {}
                             </div>
                         )}
                     </Form>
                 </Col>
             </Row>
         </Container>
-    );
-}
+    );}
 
-export default App;
+
+    export default App;
