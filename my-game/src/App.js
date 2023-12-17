@@ -13,17 +13,53 @@ function App() {
     const [gameStarted, setGameStarted] = useState(false);
     const [score, setScore] = useState(0);
     const [correctAnswerFound, setCorrectAnswerFound] = useState(false);
+    const [difficulty, setDifficulty] = useState('');
 
     function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     const handleStartGame = () => {
-        setSecretNumber(generateRandomNumber(minNumber, maxNumber));
+        if (!difficulty) {
+            setMessage('Lütfen bir zorluk seviyesi seçin.');
+            return;
+        }
+
+        let min, max;
+        let difficultyMessage = '';
+
+        switch (difficulty) {
+            case 'easy':
+                min = 0;
+                max = 10;
+                difficultyMessage = 'Easy (0-10)';
+                break;
+            case 'medium':
+                min = 0;
+                max = 100;
+                difficultyMessage = 'Medium (0-100)';
+                break;
+            case 'hard':
+                min = 0;
+                max = 1000;
+                difficultyMessage = 'Hard (0-1000)';
+                break;
+            case 'custom':
+                min = minNumber;
+                max = maxNumber;
+                difficultyMessage = `Custom (${min}-${max})`;
+                break;
+            default:
+                break;
+        }
+
+        setMinNumber(min);
+        setMaxNumber(max);
+        setSecretNumber(generateRandomNumber(min, max));
         setGameStarted(true);
         setAttemptsLeft(5);
-        setMessage('');
-        setCorrectAnswerFound(false); // Reset the correctAnswerFound state
+        setMessage(`Zorluk Seviyesi: ${difficultyMessage}`);
+        setCorrectAnswerFound(false);
     };
 
     const handleResetGame = () => {
@@ -31,7 +67,8 @@ function App() {
         setUserGuess('');
         setMessage('');
         setScore(0);
-        setCorrectAnswerFound(false); // Reset the correctAnswerFound state
+        setCorrectAnswerFound(false);
+        setDifficulty('');
     };
 
     const handleGuess = () => {
@@ -47,7 +84,6 @@ function App() {
             setScore((prevScore) => prevScore + currentScore);
             setMessage(`Tebrikler, doğru sayıyı buldunuz! Puanınız: ${currentScore}`);
             setCorrectAnswerFound(true);
-            // setGameStarted(false); // Comment this line to keep the game screen open after a correct guess
         } else {
             const difference = Math.abs(secretNumber - guess);
             setMessage(
@@ -71,33 +107,49 @@ function App() {
         return score >= 0 ? score : 0;
     };
 
+    const handleDifficultyChange = (e) => {
+        setDifficulty(e.target.value);
+        setGameStarted(false); // Reset game state when difficulty changes
+    };
+
     return (
         <Container className="mt-5">
             <Row>
                 <Col md={{ span: 6, offset: 3 }}>
                     <h1>Sayı Tahmin Oyunu</h1>
                     <Form>
-                        <Form.Group controlId="formMinNumber">
-                            <Form.Label>Minimum Sayı:</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={minNumber}
-                                onChange={(e) => setMinNumber(parseInt(e.target.value, 10))}
-                            />
+                        <Form.Group controlId="formDifficulty">
+                            <Form.Label>Oyun Zorluğu:</Form.Label>
+                            <Form.Control as="select" onChange={handleDifficultyChange} value={difficulty}>
+                                <option value="">Zorluk Seviyesi Seçin</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="custom">Custom</option>
+                            </Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId="formMaxNumber">
-                            <Form.Label>Maksimum Sayı:</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={maxNumber}
-                                onChange={(e) => setMaxNumber(parseInt(e.target.value, 10))}
-                            />
-                        </Form.Group>
+                        {difficulty === 'custom' && (
+                            <>
+                                <Form.Group controlId="formMinNumber">
+                                    <Form.Label>Minimum Sayı:</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        value={minNumber}
+                                        onChange={(e) => setMinNumber(parseInt(e.target.value, 10))}
+                                    />
+                                </Form.Group>
 
-                        <Button variant="primary" onClick={handleStartGame} disabled={gameStarted}>
-                            Oyunu Başlat
-                        </Button>
+                                <Form.Group controlId="formMaxNumber">
+                                    <Form.Label>Maksimum Sayı:</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        value={maxNumber}
+                                        onChange={(e) => setMaxNumber(parseInt(e.target.value, 10))}
+                                    />
+                                </Form.Group>
+                            </>
+                        )}
 
                         {gameStarted && (
                             <div>
@@ -122,6 +174,12 @@ function App() {
                                 <p>Kalan Deneme Hakkı: {attemptsLeft}</p>
                                 <p>Toplam Puan: {score}</p>
                             </div>
+                        )}
+
+                        {!gameStarted && (
+                            <Button variant="primary" onClick={handleStartGame}>
+                                Oyunu Başlat
+                            </Button>
                         )}
                     </Form>
                 </Col>
