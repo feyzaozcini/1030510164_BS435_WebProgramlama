@@ -12,6 +12,7 @@ function App() {
     const [attemptsLeft, setAttemptsLeft] = useState(5);
     const [gameStarted, setGameStarted] = useState(false);
     const [score, setScore] = useState(0);
+    const [correctAnswerFound, setCorrectAnswerFound] = useState(false);
 
     function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -22,8 +23,16 @@ function App() {
         setGameStarted(true);
         setAttemptsLeft(5);
         setMessage('');
+        setCorrectAnswerFound(false); // Reset the correctAnswerFound state
     };
 
+    const handleResetGame = () => {
+        setGameStarted(false);
+        setUserGuess('');
+        setMessage('');
+        setScore(0);
+        setCorrectAnswerFound(false); // Reset the correctAnswerFound state
+    };
 
     const handleGuess = () => {
         const guess = parseInt(userGuess, 10);
@@ -37,7 +46,8 @@ function App() {
             const currentScore = calculateScore(attemptsLeft);
             setScore((prevScore) => prevScore + currentScore);
             setMessage(`Tebrikler, doğru sayıyı buldunuz! Puanınız: ${currentScore}`);
-            setGameStarted(false);
+            setCorrectAnswerFound(true);
+            // setGameStarted(false); // Comment this line to keep the game screen open after a correct guess
         } else {
             const difference = Math.abs(secretNumber - guess);
             setMessage(
@@ -54,14 +64,12 @@ function App() {
     };
 
     const calculateScore = (remainingAttempts) => {
-        const baseScore = 50; // İlk tahminde alınacak başlangıç puanı
-        const decrement = 10; // Her sonraki tahminde düşecek puan miktarı
+        const baseScore = 50;
+        const decrement = 10;
 
         const score = baseScore - (5 - remainingAttempts) * decrement;
-        return score >= 0 ? score : 0; // Puan negatif olmamalı
+        return score >= 0 ? score : 0;
     };
-
-
 
     return (
         <Container className="mt-5">
@@ -102,20 +110,24 @@ function App() {
                                     />
                                 </Form.Group>
 
-                                <Button variant="success" onClick={handleGuess}>
+                                <Button variant="success" onClick={handleGuess} disabled={correctAnswerFound}>
                                     Tahmin Et
+                                </Button>
+
+                                <Button variant="danger" onClick={handleResetGame}>
+                                    Yeniden Başlat
                                 </Button>
 
                                 <p>{message}</p>
                                 <p>Kalan Deneme Hakkı: {attemptsLeft}</p>
-                                <p>Toplam Puan: {score}</p> {}
+                                <p>Toplam Puan: {score}</p>
                             </div>
                         )}
                     </Form>
                 </Col>
             </Row>
         </Container>
-    );}
+    );
+}
 
-
-    export default App;
+export default App;
