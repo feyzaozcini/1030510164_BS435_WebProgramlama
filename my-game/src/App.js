@@ -47,7 +47,7 @@ function App() {
             case 'custom':
                 min = minNumber;
                 max = maxNumber;
-                difficultyMessage = `Custom (${min}-${max})`;
+                difficultyMessage = `Player (${min}-${max})`;
                 break;
             default:
                 break;
