@@ -113,9 +113,9 @@ function App() {
     };
 
     return (
-        <Container className="mt-5">
+        <Container className="mt-5 container">
             <Row>
-                <Col md={{ span: 6, offset: 3 }}>
+                <Col md={{ span: 6, offset: 3 }} className={"game-container"}>
                     <h1>Sayı Tahmin Oyunu</h1>
                     <Form>
                         <Form.Group controlId="formDifficulty">
@@ -170,14 +170,14 @@ function App() {
                                     Yeniden Başlat
                                 </Button>
 
-                                <p>{message}</p>
+                                <p className={"message"}>{message}</p>
                                 <p>Kalan Deneme Hakkı: {attemptsLeft}</p>
                                 <p>Toplam Puan: {score}</p>
                             </div>
                         )}
 
                         {!gameStarted && (
-                            <Button variant="primary" onClick={handleStartGame}>
+                            <Button variant="primary" onClick={handleStartGame} className={"btn"}>
                                 Oyunu Başlat
                             </Button>
                         )}
