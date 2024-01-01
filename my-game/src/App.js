@@ -94,7 +94,7 @@ function App() {
             setAttemptsLeft((prevAttempts) => prevAttempts - 1);
             if (attemptsLeft === 1) {
                 setMessage(`Üzgünüz, doğru sayıyı bulamadınız. Doğru sayı: ${secretNumber}`);
-                setGameStarted(false);
+
             }
         }
     };
