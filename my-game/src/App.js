@@ -120,14 +120,14 @@ function App() {
                     <Image src="/image.png" alt="Left Image" fluid style={{ width: '350px', height: '250px' }}/>
                     <h1>Sayı Tahmin Oyunu</h1>
                     <Form>
-                        <Form.Group controlId="formDifficulty">
+                        <Form.Group controlId="formDifficulty" style={{ marginBottom: '20px' }}>
                             <Form.Label>Oyun Zorluğu:</Form.Label>
                             <Form.Control as="select" onChange={handleDifficultyChange} value={difficulty}>
                                 <option value="">Zorluk Seviyesi Seçin</option>
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
-                                <option value="custom">Custom</option>
+                                <option value="custom">Player</option>
                             </Form.Control>
                         </Form.Group>
 
@@ -155,7 +155,7 @@ function App() {
 
                         {gameStarted && (
                             <div>
-                                <Form.Group controlId="formGuess">
+                                <Form.Group controlId="formGuess" style={{ marginBottom: '20px' }}>
                                     <Form.Label>Sayı Tahmini:</Form.Label>
                                     <Form.Control
                                         type="number"
@@ -164,7 +164,7 @@ function App() {
                                     />
                                 </Form.Group>
 
-                                <Button variant="success" onClick={handleGuess} disabled={correctAnswerFound}>
+                                <Button variant="success" onClick={handleGuess} disabled={correctAnswerFound || attemptsLeft === 0}>
                                     Tahmin Et
                                 </Button>
 
