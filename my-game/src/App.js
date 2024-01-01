@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col ,Image} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -115,7 +115,9 @@ function App() {
     return (
         <Container className="mt-5 container">
             <Row>
+
                 <Col md={{ span: 6, offset: 3 }} className={"game-container"}>
+                    <Image src="/image.png" alt="Left Image" fluid style={{ width: '350px', height: '250px' }}/>
                     <h1>Sayı Tahmin Oyunu</h1>
                     <Form>
                         <Form.Group controlId="formDifficulty">
